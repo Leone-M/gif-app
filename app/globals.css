@@ -14,6 +14,16 @@
   }
 }
 
+@layer base {
+  @font-face {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 400;
+    font-display: swap;
+    src: url("./fonts/Roboto-Regular.woff2") format('woff2');
+  }
+}
+
 body {
   color: var(--foreground);
   background: var(--background);
