@@ -17,7 +17,7 @@ export default function MessageBubble({prop, gif}: any) {
                 <div className="flex flex-wrap text-wrap box-content rounded-md bg-[#D2D8FF] h-fit h-min=56 min-w-min max-w-[560px] b-[6px]">
                     <p className="text-pretty p-2 place-self-center text-black max-w-[560px] break-all whitespace-normal font-Roboto">{prop}</p>
                 </div>
-                <p className="text-[#99A2AD] place-self-end text-sm px-2">{msg_time.toLocaleString().slice(-8, -3)}</p>
+                <p className="text-[#99A2AD] place-self-end text-sm px-2">{msg_time.getHours() + ":" + msg_time.getSeconds()}</p>
             </div>
                 )
     }
