@@ -1,55 +1,47 @@
-// import { GifObject } from "@/app/lib/gif-get"
 import Image from "next/image";
 import { getTrendingGif, searchForGif, GifObject } from "@/app/lib/gif-get"
-import { useEffect, useState } from "react";
-import SearchBar from "./gif-search";
-import { useRef } from "react";
+import React, { useEffect, useState, MutableRefObject } from "react";
 
-export default function GifGrid({status, changeStatus, messages, sendGif}) {
-    const searchInputRef = useRef(null)
-    const [inputValue, setInputValue] = useState("")
-    function searchChange(e){
-        setInputValue(e.target.value)
-    }
+export default function GifGrid({props} : {props: {status: boolean, inputValue: string, changeStatus: Function, sendGif: Function, setInputValue: Function}}) {
+    const [data, setData] = useState([<div key={-1}></div>])
 
-    // useEffect(() => {
-    //     console.log("Use effect");
-    // }, [inputValue]);
-
-    const [data, setData] = useState([null]);
-    var gifs = []
     useEffect(() => {
+        setData([])
         async function fetchGifs() {
-            let response;
-            var gifs: any[] = []
-            if (inputValue == "") {
-                response = await getTrendingGif();
-            } else {
-                response = await searchForGif(inputValue);
+            let gifs: React.JSX.Element[] = []
+            let response: GifObject[] = []
+            if (props.inputValue.trim() == "/gif") {
+                response = await getTrendingGif()
+            } else if (props.inputValue.includes("/gif")) {
+                response = await searchForGif(props.inputValue.slice(4))
             }
-            response.forEach( (gif: GifObject) => {
-                gifs.push(
-                    <div key={gifs.length} className="relative container  object-center rounded-lg" onClick={() => {changeStatus(); sendGif(gif["media_formats"]["gif"]["url"])}}>
-                        <Image className="object-fill overflow-hidden" fill src={gif["media_formats"]["nanogif"]["url"]} key={gifs.length} alt={ "Gif #" + String(gifs.length)}></Image>
-                    </div>
-            )
-            });
-            setData(gifs)
+            if (response.length != 0){
+                for (let index = 0; index < response.length-3; index = index+3) {
+                    gifs.push(
+                        <div key={index} className="flex gap-[10px] w-[378px] h-[118px]">
+                            <div onClick={() => {props.changeStatus(); props.sendGif(response[index].media_formats["gif"].url); props.setInputValue("") }} className={"flex-auto relative h-full"} style={{ width: `${Math.ceil(response[index].media_formats["mediumgif"].dims[0] * 118 / response[index].media_formats["mediumgif"].dims[1])}px` }}>
+                                <Image fill className="z-50 overflow-hidden rounded-[2px] shadow-md" alt={response[index].content_description} src={response[index].media_formats["mediumgif"].url}></Image>
+                            </div>
+                            <div onClick={() => {props.changeStatus(); props.sendGif(response[index+1].media_formats["gif"].url); props.setInputValue("")  }} className={"flex-auto relative h-full"} style={{ width: `${Math.ceil(response[index+1].media_formats["mediumgif"].dims[0] * 118 / response[index+1].media_formats["mediumgif"].dims[1])}px` }}>
+                                <Image fill className="z-50 overflow-hidden rounded-[2px] shadow-md" alt={response[index+1].content_description} src={response[index+1].media_formats["mediumgif"].url}></Image>
+                            </div>
+                            <div onClick={() => {props.changeStatus(); props.sendGif(response[index+2].media_formats["gif"].url); props.setInputValue("")  }} className={"flex-auto relative h-full"} style={{ width: `${Math.ceil(response[index+2].media_formats["mediumgif"].dims[0] * 118 / response[index+2].media_formats["mediumgif"].dims[1])}px` }}>
+                                <Image fill className="z-50 overflow-hidden rounded-[2px] shadow-md" alt={response[index+2].content_description} src={response[index+2].media_formats["mediumgif"].url}></Image>
+                            </div>
+                        </div>
+                    )
+                }
+                setData(gifs)
+            }
         }
         fetchGifs()
-    }, [inputValue])
+    }, [props.inputValue])
 
-    useEffect(() => {
-        if (searchInputRef.current) {
-            searchInputRef.current.focus();
-        }
-    }, [status])
-    return (
-        <div className="z-50 flex flex-col h-[438px] w-[640px] translate-y-[-62px] absolute p-4">
-            <div className="grid grid-cols-4 grid-rows-4 gap-[2px] bg-[#D8D8D8] border-zinc-400 border-[1px] w-full h-full p-[1px] content-stretch">
+    return(
+        <div id="gifBox" className="place-self-start absolute left-4 bottom-[70px] border-[1px] pr-[4px] bg-inherit border-[#D3D9DE] z-20 w-[404px] h-[248px] overflow-hidden rounded-[1px]">
+            <div className="grid grid-flow-row gap-[10px] w-full h-full overflow-y-auto pl-[10px] pt-[10px] box-border scrollable-grid" >
                 {data}
             </div>
-            <SearchBar inputRef={searchInputRef} inputValue={inputValue} searchChange={searchChange}></SearchBar>
-        </div>)
-
+        </div>
+    )
 }

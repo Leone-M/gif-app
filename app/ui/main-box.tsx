@@ -7,18 +7,23 @@ import MessageBubble from "./message-bubble";
 
 export default function MainBox() {
     const [status, setStatus] = useState(false)
-
-    function changeStatus() {
-        setStatus((prevStatus) => !prevStatus)
+    const [inputValue, setInputValue] = useState<string>("")
+    function inputChange({value}: {value:string}){
+        setInputValue(value)
     }
 
-    const [messages, setMessages] = useState([])
+    function changeStatus(status: boolean) {
+        setStatus((prevStatus) => status)
+    }
+
+    const [messages, setMessages] = useState([<div key={0}></div>])
 
     function SendMessage(formData: FormData) {
         setMessages((prevMessages) => [
             ...prevMessages,
             <MessageBubble key={prevMessages.length} gif={false} prop={formData.get("message")}></MessageBubble>
-        ])
+        ]);
+        setInputValue("")
     }
 
     function sendGif(url: string) {
@@ -29,8 +34,8 @@ export default function MainBox() {
     }
 
     return (    
-    <div className="flex flex-col place-content-end container h-[500px] w-[640px] max-w-[640px] bg-[#EDEDED] place-self-center rounded">
-        {status && <GifGrid status={status} changeStatus={changeStatus} messages={messages} sendGif={sendGif}></GifGrid>}
-        <MessageBox status={status} changeStatus={changeStatus} messages={messages} SendMessage={SendMessage}></MessageBox>
+    <div className=" relative flex flex-col overflow-hidden place-content-end container h-[340px] w-[437px] max-w-[437px] bg-[#EDEDED] place-self-center rounded">
+        {status && <GifGrid props={{status, inputValue, changeStatus, sendGif, setInputValue}}></GifGrid>}
+        <MessageBox props={{status, changeStatus, messages, SendMessage, inputValue, setInputValue}}></MessageBox>
     </div>)
 }

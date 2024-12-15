@@ -7,6 +7,26 @@
   --foreground: #171717;
 }
 
+/* В вашем CSS-файле */
+::-webkit-scrollbar {
+  width: 6px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #DAE2EA;
+  /* border-right: solid 6px; */
+  height: 77px;
+  border-radius: 3px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #c6cdd4;
+}
+
+::-webkit-scrollbar-track {
+  margin-top: 10px;
+}
+
 @media (prefers-color-scheme: dark) {
   :root {
     --background: #0a0a0a;

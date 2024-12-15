@@ -3,10 +3,22 @@
 "use server";
 
 const api_key = "AIzaSyBgKiBaCIVTyBf5-tS6gftSUAFIzzejWwc"
+
+interface MEDIA_OBJECT {
+    url: string,
+    dims: number[],
+    duration: number,
+    size: number
+}
+
+type MediaDict = {
+    [key: string]: MEDIA_OBJECT
+}
+
 export interface GifObject {
     id: string,
     title: string,
-    media_formats: [Object]
+    media_formats: MediaDict,
     created: number,
     content_description: string,
     itemurl: string,
@@ -19,7 +31,7 @@ export interface GifObject {
 
 export async function getTrendingGif() {
     console.log("trying...")
-    let gif_objs: Promise<GifObject[]> = fetch('https://tenor.googleapis.com/v2/featured?key=' + api_key + "&limit=16").then((response) => {
+    let gif_objs: Promise<GifObject[]> = fetch('https://tenor.googleapis.com/v2/featured?key=' + api_key + "&limit=50").then((response) => {
         console.log("fetched")
         let data = response.json();
         let gif_objs = data.then((value) => {
@@ -36,7 +48,7 @@ export async function getTrendingGif() {
 
 export async function searchForGif(query: string) {
     console.log("trying... search " + query)
-    let gif_objs: Promise<GifObject[]> = fetch('https://tenor.googleapis.com/v2/search?key=' + api_key +"&q=" + query + "&limit=16").then((response) => {
+    let gif_objs: Promise<GifObject[]> = fetch('https://tenor.googleapis.com/v2/search?key=' + api_key +"&q=" + query + "&limit=50").then((response) => {
         console.log("fetched")
         let data = response.json();
         let gif_objs = data.then((value) => {
