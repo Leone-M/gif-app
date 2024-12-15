@@ -5,7 +5,7 @@ export default function MessageBubble({prop, gif}: any) {
     if (gif) {
         return (
             <div className="flex flex-row py-4 pr-8 pl-4 max-w-[640px] bg-[#EDEDED] w-full">
-                <div className="flex flex-wrap text-wrap container relative box-content rounded-md bg-[#D2D8FF] min-h-[300px] min-w-[128px] max-h-[300px] max-w-[560px] b-[6px]">
+                <div className="flex flex-wrap text-wrap container relative box-content rounded-md bg-[#D2D8FF] w-[352px] h-[220px] b-[6px]">
                     <Image className="object-fill overflow-hidden rounded-[6px]" fill src={prop} alt="There should be gif"></Image>
                 </div>
                 <p className="text-[#99A2AD] place-self-end text-sm px-2">{msg_time.toLocaleString().slice(-8, -3)}</p>
